@@ -5,12 +5,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.kapil.validator.example.databinding.ActivityMainBinding
-import com.kapil.validator.library.ValidateTor
+import com.kapil.validator.library.ValidatorBot
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var validateTor: ValidateTor
+    private lateinit var validatorBot: ValidatorBot
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initVariables() {
-        validateTor = ValidateTor()
+        validatorBot = ValidatorBot()
     }
 
     private fun setUpUiWidgets() {
@@ -34,9 +34,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun validateCreditCardField(editText: EditText) {
         val str = editText.text.toString()
-        if (validateTor.isEmpty(str)) {
+        if (validatorBot.isEmpty(str)) {
             editText.error = "Field is empty!"
-        } else if (!validateTor.validateCreditCard(str)) {
+        } else if (!validatorBot.validateCreditCard(str)) {
             editText.error = "Invalid Credit Card number!"
         } else {
             Toast.makeText(this, "Valid Credit Card Number!", Toast.LENGTH_SHORT).show()
@@ -45,12 +45,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun validatePasswordField(editText: EditText) {
         val str = editText.text.toString()
-        if (validateTor.isEmpty(str)) {
+        if (validatorBot.isEmpty(str)) {
             editText.error = "Field is empty!"
-        } else if (validateTor.isAtleastLength(str, 8)
-            && validateTor.hasAtleastOneDigit(str)
-            && validateTor.hasAtleastOneUppercaseCharacter(str)
-            && validateTor.hasAtleastOneSpecialCharacter(str)
+        } else if (validatorBot.isAtleastLength(str, 8)
+            && validatorBot.hasAtleastOneDigit(str)
+            && validatorBot.hasAtleastOneUppercaseCharacter(str)
+            && validatorBot.hasAtleastOneSpecialCharacter(str)
         ) {
             Toast.makeText(this, "Valid Password!", Toast.LENGTH_SHORT).show()
         } else {
@@ -61,9 +61,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun validateEmailField(editText: EditText) {
         val str = editText.text.toString()
-        if (validateTor.isEmpty(str)) {
+        if (validatorBot.isEmpty(str)) {
             editText.error = "Field is empty!"
-        } else if (!validateTor.isEmail(str)) {
+        } else if (!validatorBot.isEmail(str)) {
             editText.error = "Invalid Email"
         } else {
             Toast.makeText(this, "Valid Email!", Toast.LENGTH_SHORT).show()

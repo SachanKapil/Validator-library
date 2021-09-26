@@ -19,68 +19,66 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+package com.kapil.validator.library
 
-package com.kapil.validator.library;
-
-import java.util.regex.Pattern;
+import java.lang.IllegalArgumentException
+import java.util.regex.Pattern
 
 /**
  * The type Regex matcher.
  */
-public class RegexMatcher {
-
-  /**
-   * Validate string against a regex.
-   *
-   * @param dataStr the data str
-   * @param regex   the regex
-   * @return the boolean
-   */
-  public boolean validate(String dataStr, String regex) {
-    if (regex == null || regex.equals("")) {
-      throw new IllegalArgumentException("regex field cannot is be null or empty!");
-    } else {
-      Pattern p = Pattern.compile(regex);
-      return validate(dataStr, p);
+internal class RegexMatcher {
+    /**
+     * Validate string against a regex.
+     *
+     * @param dataStr the data str
+     * @param regex   the regex
+     * @return the boolean
+     */
+    fun validate(dataStr: String?, regex: String?): Boolean {
+        return if (regex == null || regex == "") {
+            throw IllegalArgumentException("regex field cannot be null or empty!")
+        } else {
+            val p = Pattern.compile(regex)
+            validate(dataStr, p)
+        }
     }
-  }
 
-
-  /**
-   * Find in string against a regex.
-   *
-   * @param dataStr the data str
-   * @param regex   the regex
-   * @return the boolean
-   */
-  public boolean find(String dataStr, String regex) {
-    if (regex == null || regex.equals("")) {
-      throw new IllegalArgumentException("regex field cannot is be null or empty!");
-    } else {
-      Pattern p = Pattern.compile(regex);
-      return find(dataStr, p);
+    /**
+     * Find in string against a regex.
+     *
+     * @param dataStr the data str
+     * @param regex   the regex
+     * @return the boolean
+     */
+    fun find(dataStr: String?, regex: String?): Boolean {
+        return if (regex == null || regex == "") {
+            throw IllegalArgumentException("regex field cannot be null or empty!")
+        } else {
+            val p = Pattern.compile(regex)
+            find(dataStr, p)
+        }
     }
-  }
 
-  /**
-   * Validate string against a pattern.
-   *
-   * @param dataStr the data str
-   * @param pattern the pattern
-   * @return the boolean
-   */
-  public boolean validate(String dataStr, Pattern pattern) {
-    return !(dataStr == null || dataStr.equals("")) && pattern.matcher(dataStr).matches();
-  }
+    /**
+     * Validate string against a pattern.
+     *
+     * @param dataStr the data str
+     * @param pattern the pattern
+     * @return the boolean
+     */
+    fun validate(dataStr: String?, pattern: Pattern): Boolean {
+        return !(dataStr.isNullOrEmpty()) && pattern.matcher(dataStr).matches()
+    }
 
-  /**
-   * Find in string against a pattern.
-   *
-   * @param dataStr the data str
-   * @param pattern the pattern
-   * @return the boolean
-   */
-  public boolean find(String dataStr, Pattern pattern) {
-    return !(dataStr == null || dataStr.equals("")) && pattern.matcher(dataStr).find();
-  }
+    /**
+     * Find in string against a pattern.
+     *
+     * @param dataStr the data str
+     * @param pattern the pattern
+     * @return the boolean
+     */
+    fun find(dataStr: String?, pattern: Pattern): Boolean {
+        return !(dataStr.isNullOrEmpty()) && pattern.matcher(dataStr).find()
+    }
 }

@@ -19,134 +19,124 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+package com.kapil.validator.library
 
-package com.kapil.validator.library;
 
 /**
  * The type Card validator.
  */
-class CardValidator {
-
-  /**
-   * Validate credit card number.
-   *
-   * @param number the number
-   * @return the boolean
-   */
-  public boolean validateCreditCardNumber(String number) {
-    return checkIfNumberContainsOnlyDigits(number)
-        && validateLengthOfCardNumber(number)
-        && (validateAndGetStartingSixDigits(number) > 0)
-        && validateCardNumberWithLuhnAlgo(number);
-  }
-
-  private String getErrorInfo(String number) {
-    if (!checkIfNumberContainsOnlyDigits(number)) {
-      return "Number should be composed of only digits!";
+internal class CardValidator {
+    /**
+     * Validate credit card number.
+     *
+     * @param number the number
+     * @return the boolean
+     */
+    fun validateCreditCardNumber(number: String): Boolean {
+        return (checkIfNumberContainsOnlyDigits(number)
+                && validateLengthOfCardNumber(number)
+                && validateAndGetStartingSixDigits(number) > 0
+                && validateCardNumberWithLuhnAlgo(number))
     }
 
-    if (!validateLengthOfCardNumber(number)) {
-      return "Card number should be of length > 12 and < 19 digits!";
-    }
-
-    if (validateAndGetStartingSixDigits(number) == 0) {
-      return "Number contains leading zeros!";
-    }
-
-    if (!validateCardNumberWithLuhnAlgo(number)) {
-      return "Number did not pass the Luhn Algo Test!";
-    }
-
-    return "NA";
-  }
-
-  private String getCreditCardIssuer(String number) {
-    return getTypeOfCard(validateAndGetStartingSixDigits(number));
-  }
-
-  private int countDigitsInNumber(long num) {
-    int count = 0;
-    while (num > 0) {
-      num = num / 10;
-      count++;
-    }
-    return count;
-  }
-
-  private boolean validateCardNumberWithLuhnAlgo(String num) {
-    int sumOfDoubleOfDigits = 0;
-    if (checkIfNumberContainsOnlyDigits(num)) {
-      boolean alternateValue = false;
-      for (int i = num.length() - 1; i >= 0; i--) {
-        int digit = Integer.parseInt(String.valueOf(num.charAt(i)));
-
-        if (alternateValue) {
-          digit *= 2;
-          if (digit > 9) {
-            digit -= 9;
-          }
+    private fun getErrorInfo(number: String): String {
+        if (!checkIfNumberContainsOnlyDigits(number)) {
+            return "Number should be composed of only digits!"
         }
-        sumOfDoubleOfDigits += digit;
-        alternateValue = !alternateValue;
-      }
+        if (!validateLengthOfCardNumber(number)) {
+            return "Card number should be of length > 12 and < 19 digits!"
+        }
+        if (validateAndGetStartingSixDigits(number) == 0L) {
+            return "Number contains leading zeros!"
+        }
+        return if (!validateCardNumberWithLuhnAlgo(number)) {
+            "Number did not pass the Luhn Algo Test!"
+        } else "NA"
     }
 
-    return (sumOfDoubleOfDigits % 10 == 0);
-  }
-
-  private boolean checkIfNumberContainsOnlyDigits(String number) {
-    // check if number string contains only digits
-    return number.matches("[0-9]+");
-  }
-
-  private boolean validateLengthOfCardNumber(String number) {
-    // check for number of digits
-    return !(number.length() < 12 || number.length() > 19);
-  }
-
-  private long validateAndGetStartingSixDigits(String number) {
-    String startSixDigitSubstring = number.substring(0, 6);
-    if (checkIfNumberContainsOnlyDigits(startSixDigitSubstring)) {
-      long startNumber = Long.parseLong(startSixDigitSubstring);
-      // Check for leading zeros
-      if (startNumber == 0 || countDigitsInNumber(startNumber) < 6) {
-        return 0;
-      }
-
-      return startNumber;
-    } else {
-      return 0;
+    private fun getCreditCardIssuer(number: String): String {
+        return getTypeOfCard(validateAndGetStartingSixDigits(number))
     }
-  }
 
-  private String getTypeOfCard(long startingSixDigits) {
-    if (startingSixDigits > 400000 && startingSixDigits < 499999) {
-      return "Visa";
-    } else if ((startingSixDigits > 222100 && startingSixDigits < 272099) || (startingSixDigits > 510000
-        && startingSixDigits < 559999)) {
-      return "Mastercard";
-    } else if (startingSixDigits > 620000 && startingSixDigits < 629999) {
-      return "China Union Pay";
-    } else if ((startingSixDigits > 500000 && startingSixDigits < 509999) || (startingSixDigits > 560000
-        && startingSixDigits < 699999)) {
-      return "Maestro";
-    } else {
-      return "Unknown";
+    private fun countDigitsInNumber(num: Long): Int {
+        var number = num
+        var count = 0
+        while (number > 0) {
+            number /= 10
+            count++
+        }
+        return count
     }
-  }
 
+    private fun validateCardNumberWithLuhnAlgo(num: String): Boolean {
+        var sumOfDoubleOfDigits = 0
+        if (checkIfNumberContainsOnlyDigits(num)) {
+            var alternateValue = false
+            for (i in num.length - 1 downTo 0) {
+                var digit = num[i].toString().toInt()
+                if (alternateValue) {
+                    digit *= 2
+                    if (digit > 9) {
+                        digit -= 9
+                    }
+                }
+                sumOfDoubleOfDigits += digit
+                alternateValue = !alternateValue
+            }
+        }
+        return sumOfDoubleOfDigits % 10 == 0
+    }
 
-  /**
-   * Gets card information.
-   *
-   * @param num the num
-   * @return the card information
-   */
-  public CardInformation getCardInformation(String num) {
-    CardInformation cardInformation = new CardInformation(num);
-    cardInformation.setCardIssuer(getCreditCardIssuer(num));
-    cardInformation.setValid(validateCreditCardNumber(num));
-    cardInformation.setError(getErrorInfo(num));
-    return cardInformation;
-  }
+    private fun checkIfNumberContainsOnlyDigits(number: String): Boolean {
+        // check if number string contains only digits
+        return number.matches(Regex("[0-9]+"))
+    }
+
+    private fun validateLengthOfCardNumber(number: String): Boolean {
+        // check for number of digits
+        return !(number.length < 12 || number.length > 19)
+    }
+
+    private fun validateAndGetStartingSixDigits(number: String): Long {
+        val startSixDigitSubstring = number.substring(0, 6)
+        return if (checkIfNumberContainsOnlyDigits(startSixDigitSubstring)) {
+            val startNumber = startSixDigitSubstring.toLong()
+            // Check for leading zeros
+            if (startNumber == 0L || countDigitsInNumber(startNumber) < 6) {
+                0
+            } else startNumber
+        } else {
+            0
+        }
+    }
+
+    private fun getTypeOfCard(startingSixDigits: Long): String {
+        return if (startingSixDigits in 400001..499998) {
+            "Visa"
+        } else if (startingSixDigits in 222101..272098 || (startingSixDigits in 510001..559998)
+        ) {
+            "Mastercard"
+        } else if (startingSixDigits in 620001..629998) {
+            "China Union Pay"
+        } else if (startingSixDigits in 500001..509998 || (startingSixDigits in 560001..699998)
+        ) {
+            "Maestro"
+        } else {
+            "Unknown"
+        }
+    }
+
+    /**
+     * Gets card information.
+     *
+     * @param num the num
+     * @return the card information
+     */
+    fun getCardInformation(num: String): CardInformation {
+        val cardInformation = CardInformation(num)
+        cardInformation.cardIssuer = getCreditCardIssuer(num)
+        cardInformation.isValid = validateCreditCardNumber(num)
+        cardInformation.error = getErrorInfo(num)
+        return cardInformation
+    }
 }
